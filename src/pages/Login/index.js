@@ -3,16 +3,19 @@ import {  View,           KeyboardAvoidingView,
           TextInput,      TouchableOpacity, 
           Text,           StyleSheet, 
           Animated,       Keyboard,
-          Alert
+          Alert,          Dimensions
            } from 'react-native';
 import CheckUser from '../../auth/CheckUser';
 import { getData, setData } from '../../utils/dataStorage';
+
+const deviceWidth = Dimensions.get('window').width
+const reducao = 120
 
 export default function Login( { navigation } ) {
 
   const [offset]  = useState(new Animated.ValueXY({x: 0,y: 95}));
   const [opacity] = useState(new Animated.Value(0));
-  const [logo]    = useState(new Animated.ValueXY({x: 180, y: 180}));
+  const [logo]    = useState(new Animated.ValueXY({x: deviceWidth-reducao, y: deviceWidth-reducao})); // 180
 
   const [userName    , setUsername]     = useState('');
   const [userPassword, setUserpassword] = useState('');
@@ -43,12 +46,12 @@ export default function Login( { navigation } ) {
     function keyboardDidShow(){
       Animated.parallel([
         Animated.timing(logo.x, {
-          toValue: 100,
+          toValue: (deviceWidth-reducao)/2,
           duration: 150,
           useNativeDriver: false,
         }),
         Animated.timing(logo.y, {
-          toValue: 100,
+          toValue: (deviceWidth-reducao)/2,
           duration: 150,
           useNativeDriver: false,
         }),
@@ -58,12 +61,12 @@ export default function Login( { navigation } ) {
     function keyboardDidHide(){
       Animated.parallel([
         Animated.timing(logo.x, {
-          toValue: 180,
+          toValue: deviceWidth-reducao,
           duration: 100,
           useNativeDriver: false,
         }),
         Animated.timing(logo.y, {
-          toValue: 180,
+          toValue: deviceWidth-reducao,
           duration: 100,
           useNativeDriver: false,
         }),
@@ -161,7 +164,7 @@ const styles = StyleSheet.create({
   containerLogo:{
     flex:1,
     justifyContent: 'center',
-    paddingTop: 10,
+    paddingTop: 25,
   },
   container:{
     flex:1,

@@ -2,7 +2,8 @@ import React, {useState, useEffect} from 'react';
 import {  View,  TextInput, 
           TouchableOpacity,
           Text,  StyleSheet, 
-          Alert, BackHandler
+          Alert, BackHandler,
+          Image
                    } from 'react-native';
                    
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -147,6 +148,14 @@ export default function CartaFrete( { navigation } ) {
   // VISUAL REACT
   return (
     <View style={styles.background}>
+
+          <Image
+          style={{
+            width: 100,
+            height: 100,
+          }} 
+          source={require('../../../assets/Logotipo_Termaco2.png')}
+          />
 
        <Text style={styles.LabelTitulo}>Carta Frete</Text>
 

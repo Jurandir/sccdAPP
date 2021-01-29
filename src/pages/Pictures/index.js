@@ -10,6 +10,9 @@ import * as MediaLibrary from 'expo-media-library';
 import SendForm from '../../utils/SendForm';
 
 const deviceWidth = Dimensions.get('window').width
+const deviceHeigh = Dimensions.get("window").height
+//const deviceScreen = Dimensions.get("screen");
+
 
 export default function Pictures( { navigation } ) {
 
@@ -355,7 +358,7 @@ const styles = StyleSheet.create({
   },
   imagem:{
     width: '100%',
-    height: 410,
+    height: deviceHeigh-190,
   },
   item: {
     backgroundColor: '#FFF',
@@ -401,5 +404,6 @@ const styles = StyleSheet.create({
   },
   btnContainer: {
     flexDirection: 'row',
+    marginBottom: 2,
   },
 });

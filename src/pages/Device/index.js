@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef  } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Modal, Image, Alert } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Modal, Image, Alert, Dimensions } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
@@ -9,6 +9,8 @@ import * as Permissions from 'expo-permissions';
 import * as MediaLibrary from 'expo-media-library';
 import { getData, setData } from '../../utils/dataStorage';
 
+const deviceHeight = Dimensions.get("window").height
+const fotoHeight   = deviceHeight-100
 
 
 export default function Divice( props ) {
@@ -69,8 +71,6 @@ export default function Divice( props ) {
     //const asset = await MediaLibrary.saveToLibraryAsync(capturedPhoto)
     const asset = await MediaLibrary.createAssetAsync(capturedPhoto)
     .then((img)=>{     
-
-      console.log('salvou foto',img)
 
       foto.id     = img.id
       foto.dados  = params.dadosCarta
@@ -139,7 +139,7 @@ export default function Divice( props ) {
             <View style={{flex:1,backgroundColor: '#000', justifyContent: 'center', alignItems: 'center', margin:0}}>
 
                   <Image
-                    style={{width:'100%', height: 505, borderRadius: 20}}
+                    style={{width:'100%', height: fotoHeight, borderRadius: 20}}
                     source={{ uri: capturedPhoto }}                  
                   />
 
