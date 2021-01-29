@@ -1,0 +1,194 @@
+import React, {useState, useEffect} from 'react';
+import {  View,           KeyboardAvoidingView, 
+          TextInput,      TouchableOpacity, 
+          Text,           StyleSheet, 
+          Animated,       Keyboard,
+          Alert
+           } from 'react-native';
+import CheckUser from '../../auth/CheckUser';
+import { getData, setData } from '../../utils/dataStorage';
+
+export default function Login( { navigation } ) {
+
+  const [offset]  = useState(new Animated.ValueXY({x: 0,y: 95}));
+  const [opacity] = useState(new Animated.Value(0));
+  const [logo]    = useState(new Animated.ValueXY({x: 180, y: 180}));
+
+  const [userName    , setUsername]     = useState('');
+  const [userPassword, setUserpassword] = useState('');
+
+  useEffect(()=> {
+
+    getData('@user').then((sto)=>{
+      setUsername(sto.data.username)
+    })
+
+    KeyboardDidShowListener = Keyboard.addListener('keyboardDidShow',keyboardDidShow);
+    KeyboardDidHideListener = Keyboard.addListener('keyboardDidHide',keyboardDidHide);
+ 
+    Animated.parallel([
+      Animated.spring(offset.y, {
+        toValue: 0,
+        speed: 4,
+        useNativeDriver: false,
+        bounciness: 20, // efeito estiling
+      }),
+      Animated.timing(opacity, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: false,
+      })  
+    ]).start();
+
+    function keyboardDidShow(){
+      Animated.parallel([
+        Animated.timing(logo.x, {
+          toValue: 100,
+          duration: 150,
+          useNativeDriver: false,
+        }),
+        Animated.timing(logo.y, {
+          toValue: 100,
+          duration: 150,
+          useNativeDriver: false,
+        }),
+      ]).start();
+    }
+
+    function keyboardDidHide(){
+      Animated.parallel([
+        Animated.timing(logo.x, {
+          toValue: 180,
+          duration: 100,
+          useNativeDriver: false,
+        }),
+        Animated.timing(logo.y, {
+          toValue: 180,
+          duration: 100,
+          useNativeDriver: false,
+        }),
+      ]).start();
+    }
+
+  }, []);
+
+  // VALIDA USUARIO EM API
+  function userLogin() {
+    setData('@user',{username: userName,  }) 
+    CheckUser(userName,userPassword).then((ret)=>{
+        if(ret.success) {
+            navigation.navigate('CartaFrete')    
+        } else {
+            Alert.alert('Acesso Negado:', ret.message, [{
+                text: 'Cancel',
+                onPress: () => console.log('Cancel Pressed'),
+                style: 'cancel'
+              }],{ cancelable: false }
+            )           
+        }   
+    }).catch(err=>{
+      console.log('ERRO:',ret)
+    })
+  }
+
+  // VISUAL REACT
+  return (
+    <KeyboardAvoidingView style={styles.background}>
+        <View style={styles.containerLogo}>
+          <Animated.Image
+          style={{
+            width: logo.x,
+            height: logo.y,
+          }} 
+          source={require('../../../assets/Logotipo_Termaco2.png')}
+          />
+        </View>
+
+        <Animated.View 
+        style={[
+          styles.container,
+          {
+            opacity: opacity,
+            transform: [
+              {translateY: offset.y }
+            ]
+          }
+        ]}>
+
+        <TextInput
+        value={userName}
+        autoCapitalize="none"
+        style={styles.input}
+        placeholder="Usuário"
+        autoCorrect={false}
+        onChangeText={(text)=> setUsername(text)}
+        />
+
+        <TextInput
+        value={userPassword}
+        autoCapitalize="none"
+        secureTextEntry={true}
+        password={true}
+        style={styles.input}
+        placeholder="Senha"
+        autoCorrect={false}
+        onChangeText={(text)=> setUserpassword(text)}
+        />
+
+        <TouchableOpacity 
+          style={styles.btnSubmit}
+          onPress={ userLogin }
+        >
+          <Text style={styles.submitText}>
+              Acessar
+          </Text>
+
+        </TouchableOpacity>
+
+      </Animated.View>
+      
+    </KeyboardAvoidingView>
+  );
+}
+
+const styles = StyleSheet.create({
+  background:{
+    flex:1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#191919',
+  },
+  containerLogo:{
+    flex:1,
+    justifyContent: 'center',
+    paddingTop: 10,
+  },
+  container:{
+    flex:1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '90%',
+    paddingBottom: 20,
+  },
+  input:{
+    backgroundColor: '#FFF',
+    width: '90%',
+    marginBottom:15,
+    color:'#222',
+    fontSize: 17,
+    borderRadius: 7,
+    padding: 10,
+  },
+  btnSubmit:{
+    backgroundColor: '#35AAFF',
+    width: '90%',
+    height: 45,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderRadius: 7,
+  },
+  submitText:{
+    color: '#FFF',
+    fontSize: 18,
+  },
+});
