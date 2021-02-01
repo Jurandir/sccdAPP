@@ -18,7 +18,9 @@ export default function CartaFrete( { navigation } ) {
   useEffect(() => {
     (async () => {
       let stoCartaFrete = await getData('@CartaFrete')
-      setCartafrete(stoCartaFrete.data.cartaFrete);
+      if(stoCartaFrete.data.cartaFrete) {
+        setCartafrete(stoCartaFrete.data.cartaFrete)
+      }
     })();
   }, []);
 
