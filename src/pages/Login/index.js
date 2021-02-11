@@ -80,7 +80,7 @@ export default function Login( { navigation } ) {
     setData('@user',{username: userName,  }) 
     CheckUser(userName,userPassword).then((ret)=>{
         if(ret.success) {
-            navigation.navigate('CartaFrete')    
+            navigation.navigate('Seletor')    
         } else {
             Alert.alert('Acesso Negado:', ret.message, [{
                 text: 'Cancel',

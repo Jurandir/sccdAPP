@@ -9,48 +9,43 @@ import {  Alert,          View,
 import { getData, setData } from '../../utils/dataStorage';
 
 
-export default function DadosFrete( props ) {
+export default function DadosPlacas( props ) {
   const { navigation } = props 
   let params = props.route.params 
 
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalTipo,    setModalTipo]    = useState(false);
-  const [placas      , setPlacas]       = useState(null);
-  const [motorista   , setMotorista]    = useState(null);
-  const [operacao    , setOperacao]     = useState(null);
-  const [tipoVeiculo , setTipoveiculo]  = useState(null);
-  const [observacao  , setObservacao]   = useState(null);    
-  const [cartaFrete  , setCartafrete]   = useState(null);    
-
-  const [empresa  , setEmpresa]   = useState(null);    
-  const [codigo   , setCodigo]    = useState(null);    
-  const [emissao  , setEmissao]   = useState(null);    
+  const [modalVisible , setModalVisible] = useState(false);
+  const [modalTipo    , setModalTipo]    = useState(false);
+  const [placas       , setPlacas]       = useState(null);
+  const [agregado     , setAgregado]    = useState(null);
+  const [operacao     , setOperacao]     = useState(null);
+  const [tipoVeiculo  , setTipoveiculo]  = useState(null);
+  const [observacao   , setObservacao]   = useState(null);    
+  const [cidade       , setCidade]    = useState(null);
+  const [marca        , setMarca]     = useState(null);
+  const [bloqueio     , setBloqueio]  = useState(null);
 
   useEffect( () => {
     if(params) {
-      setCartafrete(params.dadosCarta.cartaFrete);
-      setPlacas(params.dadosCarta.placas);
-      setMotorista(params.dadosCarta.motorista);
-      setEmpresa(params.dadosCarta.empresa);
-      setCodigo(params.dadosCarta.codigo);
-      setEmissao(params.dadosCarta.data);
+
+      setPlacas(params.dadosVeiculo.placas);
+      setAgregado(params.dadosVeiculo.agregado);
+      setCidade(params.dadosVeiculo.cidade);
+      setMarca(params.dadosVeiculo.marca);
+      setBloqueio(params.dadosVeiculo.bloqueio);
+
       setOperacao('CARGA')
       setTipoveiculo('NORMAL')
     } else {
-      getData('@CartaFrete').then((sto) =>{
-        setCartafrete(sto.data.cartaFrete);
+      getData('@Placas').then((sto) =>{
         setPlacas(sto.data.placas);
-        setMotorista(sto.data.motorista);
-        setEmpresa(sto.data.empresa);
-        setCodigo(sto.data.codigo);
-        setEmissao(sto.data.data);
+        setAgregado(sto.data.agregado);
       })
 
-      getData('@DadosFrete').then((sto) => {        
+      getData('@DadosVeiculo').then((sto) => {        
         if (sto.data) {
-          setOperacao(   sto.data.dadosFrete.operacao    );
-          setTipoveiculo(sto.data.dadosFrete.tipoVeiculo );
-          setObservacao( sto.data.dadosFrete.observacao  );
+          setOperacao(   sto.data.dadosVeiculo.operacao    );
+          setTipoveiculo(sto.data.dadosVeiculo.tipoVeiculo );
+          setObservacao( sto.data.dadosVeiculo.observacao  );
         }
       })
     }
@@ -58,31 +53,34 @@ export default function DadosFrete( props ) {
 
   // GRAVA EM MEMÓRIA INTERNA (dadosFrete)
   const setDadosFrete = async () => {
-    let dadosFrete = {
+    let dadosVeiculo = {
       placas: placas,
-      motorista: motorista,
+      cidade: cidade,
+      marca: marca,
+      bloqueio: bloqueio,
+      agregado: agregado,
+      bloqueio: bloqueio,
       operacao: operacao,
       tipoveiculo: tipoVeiculo,
       observacao: observacao,
-      cartafrete: cartaFrete
     }
-    setData('@DadosFrete',{ dadosFrete: dadosFrete })
+    setData('@DadosVeiculo',{ dadosVeiculo: dadosVeiculo })
   }
 
   // NAVEGA PARA TELA PARA FOTOGRAFAR
   const fotografar = () => {
     setDadosFrete().then(()=>{
-      let dadosCarta = params.dadosCarta
-      dadosCarta.operacao    = operacao
-      dadosCarta.tipoVeiculo = tipoVeiculo
-      dadosCarta.observacao  = observacao
-      navigation.navigate('Device',{dadosCarta})
+      let dadosVeiculo = params.dadosVeiculo
+      dadosVeiculo.operacao    = operacao
+      dadosVeiculo.tipoVeiculo = tipoVeiculo
+      dadosVeiculo.observacao  = observacao
+      navigation.navigate('Device',{dadosVeiculo})
     })
   }
 
   // NAVEGA PARA TELA DE LISTA DE FOTOS A ENVIAR
   const showPictures = () => {
-      getData('@ListaFotos').then((sto) =>{
+      getData('@ListaFotosPlacas').then((sto) =>{
          if(!sto.data) {
             sto.data = []
          }         
@@ -131,30 +129,33 @@ export default function DadosFrete( props ) {
     <SafeAreaView style={styles.background}>
 
         <Text style={styles.LabelTitulo}>
-          Carta Frete
+          Placas:
         </Text>
-        <Text style={styles.LabelCartaFrete}>
-          {cartaFrete}
+        <Text style={styles.LabelPlacas}>
+          {placas}
+        </Text>
+        <Text style={styles.LabelCidade}>
+           {cidade}
         </Text>
 
-        <Text style={styles.LabelText}>Placas</Text>
+        <Text style={styles.LabelText}>Marca</Text>
         <TextInput
-          value={placas}
+          value={marca}
           style={styles.input}
           editable = {false}
-          placeholder="Placas"
+          placeholder="Marca"
           autoCorrect={false}
-          onChangeText={(text)=> { setPlacas(text)}}
+          onChangeText={(text)=> { setMarca(text)}}
         />
 
-        <Text style={styles.LabelText}>Motorista</Text>
+        <Text style={styles.LabelText}>Agregado</Text>
         <TextInput
-          value={motorista}
+          value={agregado}
           style={styles.input}
           editable = {false}
-          placeholder="Motorista"
+          placeholder="Agregado"
           autoCorrect={false}
-          onChangeText={(text)=> { setMotorista(text)}}
+          onChangeText={(text)=> { setAgregado(text)}}
         />
 
         <Text style={styles.LabelText}>Operação:</Text>
@@ -359,14 +360,22 @@ const styles = StyleSheet.create({
   LabelTitulo:{
     color: '#FFF',
     textAlign: "center",
-    marginTop: 2,
-    fontSize: 14
+    marginTop: 0,
+    marginBottom: 0,
+    fontSize: 16
   },
-  LabelCartaFrete:{
+  LabelCidade:{
     color: '#FFF',
     textAlign: "center",
     marginTop: 0,
     marginBottom: 10,
+    fontSize: 10
+  },
+  LabelPlacas:{
+    color: '#FFF',
+    textAlign: "center",
+    marginTop: 0,
+    marginBottom: 0,
     fontSize: 30
   },  
   centeredView: {

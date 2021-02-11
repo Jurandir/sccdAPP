@@ -9,18 +9,39 @@ import {  View,  TextInput,
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
 import * as MediaLibrary from 'expo-media-library';                  
 import GetCartaFrete from '../../interface/GetCartaFrete';
+import GetPlacasVeiculo from '../../interface/GetPlacasVeiculo';
 import { delData, getData, setData } from '../../utils/dataStorage';
 
+import RadioSeletor from '../../Components/RadioOpcaoSeletor'
+
 // CARTAFRETE
-export default function CartaFrete( { navigation } ) {
+export default function Seletor( { navigation } ) {
   const [cartaFrete  , setCartafrete]   = useState(''); 
+  const [placas      , setPlacas]       = useState(''); 
+  const [sel         , setSel]          = useState(''); 
+  let   valorSeletor = 'CartaFrete'
+
+  const OpcaoSeletor = (valor) => {
+    valorSeletor = valor
+    console.log('OpcaoSeletor =',valorSeletor)
+    setSel(valorSeletor)
+  }
 
   useEffect(() => {
     (async () => {
+      
+      setSel(valorSeletor)
+
       let stoCartaFrete = await getData('@CartaFrete')
       if(stoCartaFrete.data.cartaFrete) {
         setCartafrete(stoCartaFrete.data.cartaFrete)
       }
+
+      let stoPlacas = await getData('@Placas')
+      if(stoPlacas.data.placas) {
+        setPlacas(stoPlacas.data.placas)
+      }
+
     })();
   }, []);
 
@@ -32,7 +53,8 @@ export default function CartaFrete( { navigation } ) {
         dados.data=[]
        }
       let qtde_fotos        = dados.data.length || 0
-      let qtde_enviados = 0     
+      let qtde_enviados = 0
+      let qtde_soltas = 0     
       for await (let item of dados.data) {
         if(item.send.success) {
           qtde_enviados++
@@ -42,6 +64,7 @@ export default function CartaFrete( { navigation } ) {
         (Memória:)
 
         Total em memória: ${qtde_fotos}
+        Não vinculadas: ${ qtde_soltas }
         Pendentes de envio: ${ qtde_fotos - qtde_enviados }
         Registros já enviados: ${qtde_enviados}
        `,
@@ -96,8 +119,62 @@ export default function CartaFrete( { navigation } ) {
     }
  }
 
- // NAVEGAR PARA PAGINA DE DETALHES 
+ // Seletor (CartaFrete/Placas)
  const entrarDetalhes = () => {
+   console.log('entrarDetalhes=',sel)
+   if (sel=='CartaFrete') {
+    entrarCartaFrete()
+   } else 
+   if (sel=='Placas') {
+    entrarPlacas()
+   }
+ }
+
+ // NAVEGAR PARA PAGINA DE DETALHES ( Placas ) 000000
+ const entrarPlacas = () => {
+  let token
+  let success
+
+  setData('@Placas',{ placas: placas })
+
+  getData('@Credencial').then((sto)=>{
+    success = sto.success
+    if (success) {
+        token = sto.data.token
+        GetPlacasVeiculo(placas,token).then((ret)=>{
+          success = ret.success  
+          if (success) {
+            let dadosVeiculo = { 
+                placas: ret.PLACA,
+                cidade: ret.CIDADE,
+                marca: ret.MARCA,
+                agregado: ret.AGREGADO,
+                bloqueio: ret.BLOQUEIO,
+                data: ret.DATA
+            }
+
+            setData('@Placas',dadosVeiculo)
+            navigation.navigate('DadosPlacas',{dadosVeiculo})
+
+          } else {
+              let msg = ret.message
+              if (!ret.message) {
+                msg = 'Problemas com o servidor.'
+              }
+              Alert.alert('Aviso:', msg, [{
+                text: 'OK',
+                onPress: () => console.log('OK Pressed'),
+                style: 'default'
+              }],{ cancelable: false })                  
+          }
+
+        }).catch(err=>{ console.log('ERRO:',err)})
+    }
+})
+}
+ 
+ // NAVEGAR PARA PAGINA DE DETALHES ( Carta Frete )
+ const entrarCartaFrete = () => {
     let w = cartaFrete.replace('-','')
     let emp = w.substring(0,3)
     let cod = w.substring(3,12).replace(/([^\d])+/gim, '');
@@ -159,8 +236,11 @@ export default function CartaFrete( { navigation } ) {
           source={require('../../../assets/Logotipo_Termaco2.png')}
           />
 
-       <Text style={styles.LabelTitulo}>Carta Frete</Text>
+       <Text style={styles.LabelTitulo}>S C C D</Text>
+       
+       <RadioSeletor onPress={OpcaoSeletor}/>
 
+        { sel == 'CartaFrete' &&
         <TextInput
             value={cartaFrete}
             autoCapitalize="characters"
@@ -170,6 +250,20 @@ export default function CartaFrete( { navigation } ) {
             autoCorrect={false}
             onChangeText={(text)=> { setCartafrete(text) }}
         />
+        }
+
+        { sel == 'Placas' &&
+        <TextInput
+            value={placas}
+            autoCapitalize="characters"
+            autoFocus={true}
+            style={styles.input}
+            placeholder="Placas"
+            autoCorrect={false}
+            onChangeText={(text)=> { setPlacas(text) }}
+        />
+        }
+
 
         <TouchableOpacity 
             style={styles.btnSubmit}
@@ -257,6 +351,7 @@ const styles = StyleSheet.create({
     color: '#FFF',
     textAlign: "center",
     marginBottom: 25,
+    fontWeight: 'bold',
     fontSize: 20
   }
 });

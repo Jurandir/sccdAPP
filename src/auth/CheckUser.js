@@ -7,8 +7,7 @@ export default async function CheckUser(user, pwd) {
     let ret = { success: false, message: '' }
     let password = Buffer.from(`"${pwd}"`).toString("base64")
 
-
-    console.log('**:',password)
+    // console.log('**:',password)
 
     if (!user) {
         ret = { success: false, err: true, message: 'Campo "Usuário local" obrigatorio para autenticação !!!!' }

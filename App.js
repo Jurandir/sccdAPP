@@ -5,7 +5,8 @@ import Home from './src/pages/Home';
 import Sobre from './src/pages/Sobre';
 import TelaMapa from './src/pages/TelaMapa';
 import Login from './src/pages/Login';
-import CartaFrete from './src/pages/CartaFrete';
+import Seletor from './src/pages/Seletor';
+import DadosPlacas from './src/pages/DadosPlacas';
 import DadosFrete from './src/pages/DadosFrete';
 import Imagens from './src/pages/Imagens';
 import Device  from './src/pages/Device';
@@ -48,7 +49,7 @@ export default function App() {
           }}
         />
 
-        <Stack.Screen name="CartaFrete" component={CartaFrete} 
+        <Stack.Screen name="Seletor" component={Seletor} 
           options={{
             headerShown: false,
             title: '',
@@ -58,6 +59,15 @@ export default function App() {
         />
 
         <Stack.Screen name="DadosFrete" component={DadosFrete} 
+          options={{
+            headerShown: false,
+            title: '',
+            headerTransparent: true,
+            headerTintColor: '#000',
+          }}
+        />
+
+        <Stack.Screen name="DadosPlacas" component={DadosPlacas} 
           options={{
             headerShown: false,
             title: '',

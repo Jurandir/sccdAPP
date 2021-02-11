@@ -29,7 +29,7 @@ export default function Home( { navigation }) {
       />
       <Button 
         title="Carta Frete" 
-        onPress={ () => navigation.navigate('CartaFrete')}
+        onPress={ () => navigation.navigate('Seletor')}
       />
       <Button 
         title="Dados do Frete" 
