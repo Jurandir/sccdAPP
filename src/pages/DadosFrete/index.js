@@ -76,7 +76,7 @@ export default function DadosFrete( props ) {
       dadosCarta.operacao    = operacao
       dadosCarta.tipoVeiculo = tipoVeiculo
       dadosCarta.observacao  = observacao
-      navigation.navigate('Divice',{dadosCarta})
+      navigation.navigate('Device',{dadosCarta})
     })
   }
 

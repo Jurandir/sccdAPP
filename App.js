@@ -8,7 +8,7 @@ import Login from './src/pages/Login';
 import CartaFrete from './src/pages/CartaFrete';
 import DadosFrete from './src/pages/DadosFrete';
 import Imagens from './src/pages/Imagens';
-import Divice  from './src/pages/Device';
+import Device  from './src/pages/Device';
 import Pictures from './src/pages/Pictures';
 
 const Stack = createStackNavigator();
@@ -84,7 +84,7 @@ export default function App() {
           }}
         />
 
-        <Stack.Screen name="Divice" component={Divice} 
+        <Stack.Screen name="Device" component={Device} 
           options={{
             headerShown: false,
             title: '',

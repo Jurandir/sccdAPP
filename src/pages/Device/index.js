@@ -13,7 +13,7 @@ const deviceHeight = Dimensions.get("window").height
 const fotoHeight   = deviceHeight-100
 
 
-export default function Divice( props ) {
+export default function Device( props ) {
   const { navigation } = props 
   let params = props.route.params 
 
