@@ -1,39 +1,66 @@
 import React, {useState, useEffect} from 'react';
 import {  View,  TouchableOpacity,
-          Text,  StyleSheet, 
+          Text,  StyleSheet, Alert 
                    } from 'react-native';                  
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { getData } from '../../utils/dataStorage';
 
 
 export default function SelectPlacas( { navigation } ) {
-  const [placa,setPlacas] = useState(['XXX-9999','YYY-8888','TTT-4444'])
+  const [placas   , setPlacas]   = useState([])
+  const [veiculos , setVeiculos] = useState([])
 
   useEffect(() => {
+    
+    getPlacasSto()
+
   }, []);
 
+  const getPlacasSto = async () => {
+    let listaPlacas = []
+    let listaVeiculos = []
+    let stoListaFotos = await getData('@ListaFotosPlacas')
+    let listaFotos = stoListaFotos.data
+    for await (let e of listaFotos) {
+      console.log(e)
+      listaPlacas.push( e.dados.placas )
+      listaVeiculos.push( `${e.dados.marca} - ${e.dados.placas}` )
+    }
+    setPlacas(listaPlacas)
+    setVeiculos(listaVeiculos)
+  }
+
+  const ListaCartas = (placa) => {
+    Alert.alert(` Placa Selecionada ${placa}`)
+  }
+
   const Placas = () =>{
-    return (
-        <TouchableOpacity 
+    return ( veiculos.map((veiculo,index)=>{ 
+      console.log(index,veiculo)
+      return (   
+        <TouchableOpacity
+            key={index} 
             style={styles.btnSubmit}
-            onPress={ ()=>{} }
+            onPress={ ()=>{ ListaCartas(placa) } }
         >
           <Text style={styles.submitText}> 
-             XXX-9999  
+             {veiculo}
           </Text>
         </TouchableOpacity>
     )
+    }))
   }
 
   return (
     <View style={styles.background}>
 
-       <Text style={styles.LabelTitulo}>Selecione a Placa:</Text>
+       <Text style={styles.LabelTitulo}>Selecione o Veículo:</Text>
 
         <Placas />
 
         <TouchableOpacity 
             style={styles.btnSubmit}
-            onPress={ () => {} }
+            onPress={ () => { navigation.goBack() } }
         >
           <MaterialCommunityIcons name="exit-run" size={35} color="#FFF" />
           <Text style={styles.submitText}> 
