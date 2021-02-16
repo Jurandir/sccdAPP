@@ -11,6 +11,8 @@ import DadosFrete from './src/pages/DadosFrete';
 import Imagens from './src/pages/Imagens';
 import Device  from './src/pages/Device';
 import Pictures from './src/pages/Pictures';
+import PicturesPlacas from './src/pages/PicturesPlacas';
+import SelectPlacas from './src/pages/SelectPlacas';
 
 const Stack = createStackNavigator();
 
@@ -58,6 +60,15 @@ export default function App() {
           }}
         />
 
+        <Stack.Screen name="SelectPlacas" component={SelectPlacas} 
+          options={{
+            headerShown: false,
+            title: '',
+            headerTransparent: true,
+            headerTintColor: '#000',
+          }}
+        />
+
         <Stack.Screen name="DadosFrete" component={DadosFrete} 
           options={{
             headerShown: false,
@@ -86,6 +97,15 @@ export default function App() {
         />
 
         <Stack.Screen name="Picture" component={Pictures} 
+          options={{
+            headerShown: false,
+            title: '',
+            headerTransparent: true,
+            headerTintColor: '#000',
+          }}
+        />
+
+        <Stack.Screen name="PicturePlacas" component={PicturesPlacas} 
           options={{
             headerShown: false,
             title: '',

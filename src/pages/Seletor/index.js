@@ -3,7 +3,7 @@ import {  View,  TextInput,
           TouchableOpacity,
           Text,  StyleSheet, 
           Alert, BackHandler,
-          Image
+          Image, Modal
                    } from 'react-native';
                    
 import { AntDesign, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -13,12 +13,15 @@ import GetPlacasVeiculo from '../../interface/GetPlacasVeiculo';
 import { delData, getData, setData } from '../../utils/dataStorage';
 
 import RadioSeletor from '../../Components/RadioOpcaoSeletor'
+import Tranbalhando from '../../Components/Trabalhando'
 
 // CARTAFRETE
 export default function Seletor( { navigation } ) {
   const [cartaFrete  , setCartafrete]   = useState(''); 
   const [placas      , setPlacas]       = useState(''); 
   const [sel         , setSel]          = useState(''); 
+  const [trabalhando , setTrabalhando ] = useState(false);
+
   let   valorSeletor = 'CartaFrete'
 
   const OpcaoSeletor = (valor) => {
@@ -31,6 +34,7 @@ export default function Seletor( { navigation } ) {
     (async () => {
       
       setSel(valorSeletor)
+      setTrabalhando(false)
 
       let stoCartaFrete = await getData('@CartaFrete')
       if(stoCartaFrete.data.cartaFrete) {
@@ -46,20 +50,32 @@ export default function Seletor( { navigation } ) {
   }, []);
 
   // MOSTRA OPÇÕES PARA ZERAR DADOS ()
-  const zeraDados = () => {
+  const zeraDados = async () => {
+    
+    let dadosPlacas = await getData('@ListaFotosPlacas')
+    if(!dadosPlacas.data){
+      dadosPlacas.data=[]
+     }
+    let totalPlacas = dadosPlacas.data.length || 0     
+
+    console.log('Dados Placas:',totalPlacas,dadosPlacas)
 
     getData('@ListaFotos').then( async (dados)=>{
-       if(!dados.data){
+
+      if(!dados.data){
         dados.data=[]
-       }
-      let qtde_fotos        = dados.data.length || 0
-      let qtde_enviados = 0
-      let qtde_soltas = 0     
+      }
+      
+      let qtde_fotos    = (dados.data.length || 0 ) + totalPlacas
+      let qtde_enviados  = 0
+      let qtde_soltas    = totalPlacas
+
       for await (let item of dados.data) {
         if(item.send.success) {
           qtde_enviados++
         }
       }
+
       Alert.alert('Status:',`
         (Memória:)
 
@@ -85,14 +101,36 @@ export default function Seletor( { navigation } ) {
     })
   }
 
+  // Criar opção para apagar fotos SOLTAS sem vinculos
+
   // OPÇÃO PARA DELETAR TODOS OS DADOS
-  const zeraTodosDados = () => {
-    delData('@ListaFotos').then((a)=>{
-       setData('@ListaFotos',[]).then((b)=>{        
-        Alert.alert('Dados zerados !!!')
+  const zeraTodosDados = async () => {
+    
+    let IDs = []
+    let stoListaFotos = await getData('@ListaFotos')
+    let listaFotos = stoListaFotos.data
+    for await ( let i of listaFotos) {   
+      IDs.push( i.id )
+    }  
+
+    let stoListaFotosPlacas = await getData('@ListaFotosPlacas')
+    let listaFotosPlacas = stoListaFotosPlacas.data
+    for await ( let i of listaFotosPlacas) {   
+      IDs.push( i.id )
+    }  
+
+    if(IDs) {     
+      await MediaLibrary.deleteAssetsAsync(IDs).then((ok)=>{
+          setData('@ListaFotos',[]).then((b)=>{        
+            setData('@ListaFotosPlacas',[]).then((b)=>{        
+              Alert.alert('Dados zerados !!!')
+            })
+          })
       })
-     })
+    }
+
   }
+
 
   // OPÇÃO PARA DELETAR OS DADOS DE FOTOS JÁ ENVIADAS
   const zeraDadosJaEnviados = async () => {
@@ -135,6 +173,8 @@ export default function Seletor( { navigation } ) {
   let token
   let success
 
+  setTrabalhando(true)
+
   setData('@Placas',{ placas: placas })
 
   getData('@Credencial').then((sto)=>{
@@ -154,10 +194,16 @@ export default function Seletor( { navigation } ) {
             }
 
             setData('@Placas',dadosVeiculo)
+            
+            setTrabalhando(false)
+            
             navigation.navigate('DadosPlacas',{dadosVeiculo})
 
           } else {
               let msg = ret.message
+              
+            setTrabalhando(false)
+
               if (!ret.message) {
                 msg = 'Problemas com o servidor.'
               }
@@ -168,7 +214,10 @@ export default function Seletor( { navigation } ) {
               }],{ cancelable: false })                  
           }
 
-        }).catch(err=>{ console.log('ERRO:',err)})
+        }).catch(err=>{ 
+          setTrabalhando(false)
+          console.log('ERRO:',err)
+        })
     }
 })
 }
@@ -180,6 +229,8 @@ export default function Seletor( { navigation } ) {
     let cod = w.substring(3,12).replace(/([^\d])+/gim, '');
     let token
     let success
+
+    setTrabalhando(true)
 
     setCartafrete(`${emp}-${cod}`)
     setData('@CartaFrete',{ cartaFrete: cartaFrete, empresa: emp, codigo: cod })
@@ -200,10 +251,16 @@ export default function Seletor( { navigation } ) {
                     data: ret.DATA
                   }
                   setData('@CartaFrete',dadosCarta)
+
+                  setTrabalhando(false)
+
                   navigation.navigate('DadosFrete',{dadosCarta})
 
               } else {
                   let msg = ret.message
+                  
+                  setTrabalhando(false)
+
                   if (!ret.message) {
                     msg = 'Problemas com o servidor.'
                   }
@@ -214,7 +271,10 @@ export default function Seletor( { navigation } ) {
                   }],{ cancelable: false })                  
               }
 
-            }).catch(err=>{ console.log('ERRO:',err)})
+            }).catch(err=>{ 
+              setTrabalhando(false)
+              console.log('ERRO:',err)
+            })
         }
     })
   }
@@ -264,6 +324,13 @@ export default function Seletor( { navigation } ) {
         />
         }
 
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={trabalhando}
+        >
+          <Tranbalhando /> 
+        </Modal> 
 
         <TouchableOpacity 
             style={styles.btnSubmit}

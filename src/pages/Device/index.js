@@ -9,35 +9,48 @@ import * as Permissions from 'expo-permissions';
 import * as MediaLibrary from 'expo-media-library';
 import { getData, setData } from '../../utils/dataStorage';
 
+import Trabalhando from '../../Components/Trabalhando'
+
+
 const deviceHeight = Dimensions.get("window").height
 const fotoHeight   = deviceHeight-100
 
 
 export default function Device( props ) {
   const { navigation } = props 
-  let params = props.route.params 
+  let params       = props.route.params 
+  let isCartaFrete = params.dadosCarta   ? true : false
+  let VarDadosFoto = params.dadosCarta   ? '@ListaFotos' : '@ListaFotosPlacas'
 
-  const [hasPermission, setHasPermission] = useState(null);
-  const [type, setType] = useState(Camera.Constants.Type.back);
+  const [hasPermission , setHasPermission] = useState(null);
+  const [type          , setType]          = useState(Camera.Constants.Type.back);
+  const [capturedPhoto , setCapturedPhoto] = useState(null);
+  const [modalOpen     , setModalOpen]     = useState(false);
+  const [fotoTipo      , setFotoTipo]      = useState(null);
+  const [trabalhando   , setTrabalhando ]  = useState(false);
+
   const camRef = useRef(null);
-  const [capturedPhoto, setCapturedPhoto] = useState(null);
-  const [modalOpen,setModalOpen] = useState(false);
 
   useEffect(() => {  
+
     (async () => {
       const { status } = await Camera.requestPermissionsAsync();
       setHasPermission(status === 'granted');
     })();
-    //(async () => {
-    //  const { status } = await Permissions.askAsync(Permissions.CAMERA);
-    //  setHasPermission(status === 'granted');
-    //})();
+
     (async () => {
       const { status } = await Permissions.askAsync(Permissions.CAMERA_ROLL);
       setHasPermission(status === 'granted');
     })();
 
+    if(!isCartaFrete) {
+      setFotoTipo('Placas')
+    } else {
+      setFotoTipo('CartaFrete')
+    }
 
+    setTrabalhando(false)
+ 
   }, []);
 
   if (hasPermission === null) {
@@ -50,11 +63,15 @@ export default function Device( props ) {
 
   // CAPTURA IMAGEM DA CÂMERA
   async function takePicture(){
+    setTrabalhando(true)
     if(camRef){
       const data = await camRef.current.takePictureAsync();
       setCapturedPhoto(data.uri)
       setModalOpen(true); 
+      setTrabalhando(false)
       console.log(data);
+    } else {
+      setTrabalhando(false)
     }
   }
 
@@ -62,7 +79,10 @@ export default function Device( props ) {
   async function savePicture(){
     let listaFotos      = []
     let foto            = {id:0, dados:{}, imagem:{}}
-    const stoListaFotos = await getData('@ListaFotos')
+
+    setTrabalhando(true)
+
+    const stoListaFotos = await getData( VarDadosFoto )
 
     if(stoListaFotos.data){
        listaFotos.push(...stoListaFotos.data)
@@ -71,11 +91,12 @@ export default function Device( props ) {
     //const asset = await MediaLibrary.saveToLibraryAsync(capturedPhoto)
     const asset = await MediaLibrary.createAssetAsync(capturedPhoto)
     .then((img)=>{     
-
+      setTrabalhando(false)
       foto.id     = img.id
-      foto.dados  = params.dadosCarta
+      foto.origem = fotoTipo     
+      foto.dados  = (fotoTipo=='Placas') ? params.dadosVeiculo : params.dadosCarta
       foto.imagem = img
-      foto.send  = {
+      foto.send   = {
         success: false,
         date: null,
         message: ''
@@ -83,17 +104,19 @@ export default function Device( props ) {
 
       listaFotos.push(foto)
 
-      setData('@ListaFotos',listaFotos).then((a)=>{
+      setData( VarDadosFoto , listaFotos ).then((a)=>{
+           setTrabalhando(false)
            Alert.alert('Salvo com sucesso !!!')
            navigation.goBack()
       }).catch(err=>{
-
+        setTrabalhando(false)
         console.log(' problemas com - salvar foto')
 
         Alert.alert('ERRO:',err)
       })
     })
     .catch( err => {
+      setTrabalhando(false)
       console.log('Err:',err)
     })
 
@@ -170,6 +193,14 @@ export default function Device( props ) {
             </View>
           </Modal>
           }
+
+          <Modal
+            animationType="fade"
+            transparent={true}
+            visible={trabalhando}
+          >
+            <Trabalhando /> 
+          </Modal> 
 
         </View>
       </Camera>

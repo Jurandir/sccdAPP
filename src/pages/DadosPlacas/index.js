@@ -8,6 +8,9 @@ import {  Alert,          View,
              } from 'react-native';
 import { getData, setData } from '../../utils/dataStorage';
 
+import Trabalhando from '../../Components/Trabalhando'
+
+
 
 export default function DadosPlacas( props ) {
   const { navigation } = props 
@@ -16,13 +19,14 @@ export default function DadosPlacas( props ) {
   const [modalVisible , setModalVisible] = useState(false);
   const [modalTipo    , setModalTipo]    = useState(false);
   const [placas       , setPlacas]       = useState(null);
-  const [agregado     , setAgregado]    = useState(null);
+  const [agregado     , setAgregado]     = useState(null);
   const [operacao     , setOperacao]     = useState(null);
   const [tipoVeiculo  , setTipoveiculo]  = useState(null);
   const [observacao   , setObservacao]   = useState(null);    
-  const [cidade       , setCidade]    = useState(null);
-  const [marca        , setMarca]     = useState(null);
-  const [bloqueio     , setBloqueio]  = useState(null);
+  const [cidade       , setCidade]       = useState(null);
+  const [marca        , setMarca]        = useState(null);
+  const [bloqueio     , setBloqueio]     = useState(null);
+  const [trabalhando  , setTrabalhando ] = useState(false);
 
   useEffect( () => {
     if(params) {
@@ -32,6 +36,7 @@ export default function DadosPlacas( props ) {
       setCidade(params.dadosVeiculo.cidade);
       setMarca(params.dadosVeiculo.marca);
       setBloqueio(params.dadosVeiculo.bloqueio);
+      setTrabalhando(false);
 
       setOperacao('CARGA')
       setTipoveiculo('NORMAL')
@@ -52,7 +57,7 @@ export default function DadosPlacas( props ) {
   }, []);
 
   // GRAVA EM MEMÓRIA INTERNA (dadosFrete)
-  const setDadosFrete = async () => {
+  const setDadosVeiculo = async () => {
     let dadosVeiculo = {
       placas: placas,
       cidade: cidade,
@@ -69,25 +74,31 @@ export default function DadosPlacas( props ) {
 
   // NAVEGA PARA TELA PARA FOTOGRAFAR
   const fotografar = () => {
-    setDadosFrete().then(()=>{
-      let dadosVeiculo = params.dadosVeiculo
-      dadosVeiculo.operacao    = operacao
-      dadosVeiculo.tipoVeiculo = tipoVeiculo
-      dadosVeiculo.observacao  = observacao
-      navigation.navigate('Device',{dadosVeiculo})
-    })
+      setTrabalhando(true)
+      setDadosVeiculo().then(()=>{
+          let dadosVeiculo = params.dadosVeiculo
+          dadosVeiculo.operacao    = operacao
+          dadosVeiculo.tipoVeiculo = tipoVeiculo
+          dadosVeiculo.observacao  = observacao
+          setTrabalhando(false)
+          navigation.navigate('Device',{dadosVeiculo})
+      })
   }
 
   // NAVEGA PARA TELA DE LISTA DE FOTOS A ENVIAR
   const showPictures = () => {
+      setTrabalhando(true)
       getData('@ListaFotosPlacas').then((sto) =>{
          if(!sto.data) {
             sto.data = []
          }         
          if(sto.data.length>0) {
-            navigation.navigate('Picture')
+            setTrabalhando(false)
+            navigation.navigate('PicturePlacas')
+            setTrabalhando(false)
          } else {
-           Alert.alert('Não existe dados relacionados !!!')
+          setTrabalhando(false)
+          Alert.alert('Não existe dados relacionados !!!')
          }
       })
   }
@@ -272,7 +283,15 @@ export default function DadosPlacas( props ) {
 
               </View>
             </View>
-      </Modal>
+          </Modal>
+      
+          <Modal
+              animationType="fade"
+              transparent={true}
+              visible={trabalhando}
+          >
+              <Trabalhando /> 
+          </Modal> 
 
     </SafeAreaView>
   );
