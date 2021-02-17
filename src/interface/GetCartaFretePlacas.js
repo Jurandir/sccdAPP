@@ -24,4 +24,4 @@ const GetCartaFretePlacas = (placas,token) => {
      })
 }
 
-export default GetCartaFrete
+export default GetCartaFretePlacas

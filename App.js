@@ -13,6 +13,7 @@ import Device  from './src/pages/Device';
 import Pictures from './src/pages/Pictures';
 import PicturesPlacas from './src/pages/PicturesPlacas';
 import SelectPlacas from './src/pages/SelectPlacas';
+import SelectCartaFrete from './src/pages/SelectCartaFrete';
 
 const Stack = createStackNavigator();
 
@@ -27,7 +28,7 @@ export default function App() {
       <Stack.Screen name="Login" component={Login} 
           options={{
             headerShown: false,
-            title: '',
+            title: 'LOGIN',
             headerTransparent: true,
             headerTintColor: '#000',
           }}
@@ -45,7 +46,7 @@ export default function App() {
         <Stack.Screen name="TelaMapa" component={TelaMapa} 
           options={{
             headerShown: true,
-            title: '',
+            title: 'TELA MAPA',
             headerTransparent: true,
             headerTintColor: '#000',
           }}
@@ -54,7 +55,7 @@ export default function App() {
         <Stack.Screen name="Seletor" component={Seletor} 
           options={{
             headerShown: false,
-            title: '',
+            title: 'SELECTOR',
             headerTransparent: true,
             headerTintColor: '#000',
           }}
@@ -63,7 +64,16 @@ export default function App() {
         <Stack.Screen name="SelectPlacas" component={SelectPlacas} 
           options={{
             headerShown: false,
-            title: '',
+            title: 'PLACAS:',
+            headerTransparent: true,
+            headerTintColor: '#000',
+          }}
+        />
+
+        <Stack.Screen name="SelectCartaFrete" component={SelectCartaFrete} 
+          options={{
+            headerShown: false,
+            title: 'CARTA FRETE:',
             headerTransparent: true,
             headerTintColor: '#000',
           }}
@@ -72,7 +82,7 @@ export default function App() {
         <Stack.Screen name="DadosFrete" component={DadosFrete} 
           options={{
             headerShown: false,
-            title: '',
+            title: 'DADOS FRETE',
             headerTransparent: true,
             headerTintColor: '#000',
           }}
@@ -81,7 +91,7 @@ export default function App() {
         <Stack.Screen name="DadosPlacas" component={DadosPlacas} 
           options={{
             headerShown: false,
-            title: '',
+            title: 'DADOS PLACAS',
             headerTransparent: true,
             headerTintColor: '#000',
           }}
@@ -90,7 +100,7 @@ export default function App() {
         <Stack.Screen name="Imagens" component={Imagens} 
           options={{
             headerShown: false,
-            title: '',
+            title: 'IMAGENS',
             headerTransparent: true,
             headerTintColor: '#000',
           }}
@@ -99,7 +109,7 @@ export default function App() {
         <Stack.Screen name="Picture" component={Pictures} 
           options={{
             headerShown: false,
-            title: '',
+            title: 'PICTURES CARTA FRETE',
             headerTransparent: true,
             headerTintColor: '#000',
           }}
@@ -108,7 +118,7 @@ export default function App() {
         <Stack.Screen name="PicturePlacas" component={PicturesPlacas} 
           options={{
             headerShown: false,
-            title: '',
+            title: 'PICTURES PLACAS',
             headerTransparent: true,
             headerTintColor: '#000',
           }}
@@ -117,7 +127,7 @@ export default function App() {
         <Stack.Screen name="Device" component={Device} 
           options={{
             headerShown: false,
-            title: '',
+            title: 'CAMÊRA',
             headerTransparent: true,
             headerTintColor: '#000',
           }}

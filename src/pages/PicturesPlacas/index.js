@@ -39,7 +39,7 @@ export default function PicturesPlacas( { navigation } ) {
   // ITEM FOTO/DADOS
   const Item = ( params ) => { 
     let valida  = dadosFotos[params.ITEM.index].valida
-    console.log('param ITEMS:',params.ITEM)
+    // console.log('param ITEMS:',params.ITEM)
     return (
     <View style={styles.item}>
       <Text style={styles.LabelTitulo}>{params.ITEM.title}</Text>
@@ -210,7 +210,7 @@ export default function PicturesPlacas( { navigation } ) {
             }}
         >
           <Text style={styles.submitText}> 
-              Carta Frete
+              Vincular
           </Text>
       </TouchableOpacity>        
       </SafeAreaView>

@@ -13,7 +13,7 @@ import GetPlacasVeiculo from '../../interface/GetPlacasVeiculo';
 import { delData, getData, setData } from '../../utils/dataStorage';
 
 import RadioSeletor from '../../Components/RadioOpcaoSeletor'
-import Tranbalhando from '../../Components/Trabalhando'
+import Trabalhando from '../../Components/Trabalhando'
 
 // CARTAFRETE
 export default function Seletor( { navigation } ) {
@@ -26,7 +26,7 @@ export default function Seletor( { navigation } ) {
 
   const OpcaoSeletor = (valor) => {
     valorSeletor = valor
-    console.log('OpcaoSeletor =',valorSeletor)
+    // console.log('OpcaoSeletor =',valorSeletor)
     setSel(valorSeletor)
   }
 
@@ -58,7 +58,7 @@ export default function Seletor( { navigation } ) {
      }
     let totalPlacas = dadosPlacas.data.length || 0     
 
-    console.log('Dados Placas:',totalPlacas,dadosPlacas)
+    // console.log('Dados Placas:',totalPlacas,dadosPlacas)
 
     getData('@ListaFotos').then( async (dados)=>{
 
@@ -159,7 +159,7 @@ export default function Seletor( { navigation } ) {
 
  // Seletor (CartaFrete/Placas)
  const entrarDetalhes = () => {
-   console.log('entrarDetalhes=',sel)
+   // console.log('entrarDetalhes=',sel)
    if (sel=='CartaFrete') {
     entrarCartaFrete()
    } else 
@@ -329,7 +329,7 @@ export default function Seletor( { navigation } ) {
           transparent={true}
           visible={trabalhando}
         >
-          <Tranbalhando /> 
+          <Trabalhando /> 
         </Modal> 
 
         <TouchableOpacity 
@@ -341,6 +341,16 @@ export default function Seletor( { navigation } ) {
              Entrar  
           </Text>
         </TouchableOpacity>
+
+        <TouchableOpacity 
+            style={styles.btnSubmit}
+            onPress={ () => { navigation.navigate('SelectPlacas') } }
+        >
+          <MaterialCommunityIcons name="account-switch" size={35} color="#FFF" />
+          <Text style={styles.submitText}> 
+              Vincular fotos
+          </Text>
+        </TouchableOpacity>        
 
         <TouchableOpacity 
             style={styles.btnSubmit}

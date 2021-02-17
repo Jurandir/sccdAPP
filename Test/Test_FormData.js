@@ -31,7 +31,7 @@ async function SendForm() {
         })
 
     
-console.log(formData)
+    // console.log(formData)
 
     axios({
     url    : api,

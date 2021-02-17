@@ -107,6 +107,9 @@ export default function Login( { navigation } ) {
           />
         </View>
 
+        <Text style={styles.LabelTitulo}>S C C D</Text>
+
+
         <Animated.View 
         style={[
           styles.container,
@@ -193,5 +196,12 @@ const styles = StyleSheet.create({
   submitText:{
     color: '#FFF',
     fontSize: 18,
+  },
+  LabelTitulo:{
+    color: '#FFF',
+    textAlign: "center",
+    marginBottom: 5,
+    fontWeight: 'bold',
+    fontSize: 30
   },
 });

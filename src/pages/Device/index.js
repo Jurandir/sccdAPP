@@ -69,7 +69,7 @@ export default function Device( props ) {
       setCapturedPhoto(data.uri)
       setModalOpen(true); 
       setTrabalhando(false)
-      console.log(data);
+      // console.log(data);
     } else {
       setTrabalhando(false)
     }
