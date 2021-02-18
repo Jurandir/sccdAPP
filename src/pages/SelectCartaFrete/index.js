@@ -4,8 +4,9 @@ import {  View,  TouchableOpacity, Modal,
                    } from 'react-native';                  
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { RadioButton } from 'react-native-paper';
-import { getData } from '../../utils/dataStorage';
+import { getData, setData } from '../../utils/dataStorage';
 import Trabalhando from '../../Components/Trabalhando';
+import ModeloCarta from "../../models/CartaFrete";
 
 
 export default function SelectCartaFrete( props ) {
@@ -53,15 +54,94 @@ export default function SelectCartaFrete( props ) {
 
   const confirmaVinculacao = async () => {
     setTrabalhando(true)
-    let sel_cartaFrete = cartaFrete[checked-1]
-    let sto_carta      = await getData('@ListaFotos')
-    let sto_placa      = await getData('@ListaFotosPlacas')
-    
-    console.log('=========================')
-//    console.log('LOCAL cartaFrete',sel_cartaFrete)
-//    console.log('LOCAL carta',sto_carta.data.dados)
-    console.log('LOCAL placa',sto_placa.data)
 
+    let sel_cartaFrete = cartaFrete[checked-1]
+    let sel_placas     = sel_cartaFrete.placas
+    let sto_carta      = await getData('@ListaFotos')
+    let var_carta      = sto_carta.data
+    let sto_placa      = await getData('@ListaFotosPlacas')
+    let var_placa      = sto_placa.data
+    let len_carta1     = var_carta.length
+    let len_placa1     = var_placa.length
+    let new_carta      = []
+    let new_placa      = []
+
+    //console.log('=================================================================================')
+
+    //console.log('Antes de processar:  carta:',len_carta1,' placa:',len_placa1)
+    //for await(let i of var_carta ) { console.log('var_CARTA:',i.id) }
+    //for await(let i of var_placa ) { console.log('var_placa:',i.id) }
+
+    async function add_nova_carta(item) {
+      return await ModeloCarta(item,sel_cartaFrete)
+    }
+
+    new_carta.push(...var_carta)
+
+    //console.log('Push:')
+    //for await(let i of new_carta ) { console.log('new_CARTA:',i.id) }
+
+    //console.log('Processando:')
+
+    for await ( let i of var_placa ){ 
+      let it_placa = i.dados.placas
+      let param = i
+
+      if(sel_placas.includes(it_placa)) {
+        let x = await add_nova_carta(param)
+        //console.log('Processando (NEW CARTA):',param.id,x.id)
+        new_carta.push(x)
+      } else {
+        //console.log('Processando (NEW placa):',param.id)
+        new_placa.push(param)
+      }
+    }
+
+    //console.log('=== (X):',xx.length)
+    //for await(let i of xx ) { console.log('xx:',i.id) }
+
+    let len_carta2     = new_carta.length
+    let len_placa2     = new_placa.length
+
+    //console.log('Antes gravar:  carta:',len_carta1,' placa:',len_placa1)
+    //for await(let i of new_carta ) { console.log('new_CARTA:',i.id) }
+    //for await(let i of new_placa ) { console.log('new_placa:',i.id) }
+
+    
+    let erro    = null
+    let success = false
+    await setData('@ListaFotos',new_carta).then((r1)=>{
+      success = r1.success
+    }).catch(err => erro = err)
+
+    if(success){
+      await setData('@ListaFotosPlacas',new_placa).then((r2)=>{
+        success = r2.success
+      }).catch(err => erro = err)
+    }
+
+    //console.log('Depois de gravar: carta:',len_carta2,' placa:',len_placa2)
+    sto_carta = await getData('@ListaFotos')
+    var_carta = sto_carta.data
+    sto_placa = await getData('@ListaFotosPlacas')
+    var_placa = sto_placa.data
+
+    //for await(let i of var_carta ) { console.log('var_CARTA:',i.id) }
+    //for await(let i of var_placa ) { console.log('var_placa:',i.id) }
+
+    if(success){
+      setTrabalhando(false)
+      Alert.alert(`Sucesso: CF: ${len_carta1} => ${len_carta2}, FP: ${len_placa1} => ${len_placa2}`)
+      navigation.goBack()
+    } else {
+      console.log(`Problemas: (SelectCartaFrete) ${sel_placas} -> Sucesso: False`)
+    }
+    
+    if(erro){
+      console.log(`Erro: (SelectCartaFrete) ${sel_placas} -> ${erro}`)
+      Alert.alert(`Erro: 
+      ${erro}`)
+    }
 
     setTrabalhando(false)
 

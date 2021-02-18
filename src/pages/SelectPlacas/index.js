@@ -14,10 +14,12 @@ export default function SelectPlacas( { navigation } ) {
   const [veiculos    , setVeiculos]     = useState([])
 
   useEffect(() => {
-    
-    getPlacasSto()
-
-  }, []);
+    const unsubscribe = navigation.addListener('focus', () => {
+      getPlacasSto()
+      // console.log('Navigation FOCUS !!!')
+    })
+    return unsubscribe
+  }, [navigation])
 
   const getPlacasSto = async () => {
     let listaPlacas = []

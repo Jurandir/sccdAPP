@@ -203,16 +203,7 @@ export default function PicturesPlacas( { navigation } ) {
           </Text>
       </TouchableOpacity>        
 
-      <TouchableOpacity 
-            style={styles.btnSubmit}
-            onPress={ ()=>{
-              navigation.navigate('SelectPlacas')
-            }}
-        >
-          <Text style={styles.submitText}> 
-              Vincular
-          </Text>
-      </TouchableOpacity>        
+      
       </SafeAreaView>
 
       <Modal
