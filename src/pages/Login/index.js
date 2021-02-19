@@ -23,7 +23,11 @@ export default function Login( { navigation } ) {
   useEffect(()=> {
 
     getData('@user').then((sto)=>{
-      setUsername(sto.data.username)
+      if(!sto.data) {
+        setUsername('')
+      } else {
+        setUsername(sto.data.username)
+      }
     })
 
     KeyboardDidShowListener = Keyboard.addListener('keyboardDidShow',keyboardDidShow);

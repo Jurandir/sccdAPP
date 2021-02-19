@@ -25,6 +25,12 @@ export default function SelectPlacas( { navigation } ) {
     let listaPlacas = []
     let listaVeiculos = []
     let stoListaFotos = await getData('@ListaFotosPlacas')
+
+    console.log('stoListaFotos:',stoListaFotos)
+    if(!stoListaFotos.data){
+      stoListaFotos.data=[]
+    }
+    
     let listaFotos = stoListaFotos.data
     for await (let e of listaFotos) {
       let existe = listaPlacas.includes(e.dados.placas)

@@ -39,7 +39,9 @@ export default function Seletor( { navigation } ) {
       setTrabalhando(false)
 
       let stoCartaFrete = await getData('@CartaFrete')
-      if(stoCartaFrete.data.cartaFrete) {
+      if(!stoCartaFrete.data) {
+        setCartafrete('')
+      } else {
         setCartafrete(stoCartaFrete.data.cartaFrete)
       }
 

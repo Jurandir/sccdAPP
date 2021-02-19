@@ -14,7 +14,11 @@ export async function getData( chave ) {
     try {
         const jsonValue = await AsyncStorage.getItem(chave)
 
-        let ret = jsonValue != null ? JSON.parse(jsonValue) : null
+        if(jsonValue===undefined){
+          jsonValue = {}
+        }
+
+        let ret = jsonValue != null ? JSON.parse(jsonValue) : {}
 
         return  { success : true, data : ret  }
       } catch(e) {
