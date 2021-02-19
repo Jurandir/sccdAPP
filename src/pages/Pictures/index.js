@@ -8,6 +8,7 @@ import { getData, setData } from '../../utils/dataStorage';
 import { AntDesign } from '@expo/vector-icons' ;
 import * as MediaLibrary from 'expo-media-library';
 import SendForm from '../../utils/SendForm';
+import Constants from 'expo-constants';
 
 const deviceWidth = Dimensions.get('window').width
 const deviceHeigh = Dimensions.get("window").height
@@ -19,6 +20,8 @@ export default function Pictures( { navigation } ) {
   const [ dadosFotos, setDadosFotos ]   = useState({});
   const [ credencial, setCredencial ]   = useState({});
   const refFoto                         = useRef(null)
+
+  let nameDevice = Constants.deviceName+' ('+Constants.sessionId+')'
 
   const Validade =( {DADOS, INDEX} ) => {
     let icon_name  = dadosFotos[INDEX].valida ? 'check' : 'close'
@@ -195,6 +198,14 @@ export default function Pictures( { navigation } ) {
       let index         = 0
 
       for await ( let it of stoListaFotos.data ) {
+        
+        if(it.send===undefined) {
+          console.log('ERRO: (Picture) it.send.success :',it.id, nameDevice)
+          it.send = {
+            success: false
+          }
+        }
+
         varDados.push( {id: it.id, 
                         title: it.dados.cartaFrete+' - '+it.dados.operacao, 
                         uri: it.imagem.uri,
@@ -207,7 +218,7 @@ export default function Pictures( { navigation } ) {
                         operacao: it.dados.operacao,
                         tipoVeiculo: it.dados.tipoVeiculo,
                         valida: true,
-                        enviada: it.send.success,
+                        enviada: it.send.success || false,
                         index: index++,
            })
       }

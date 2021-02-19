@@ -11,6 +11,7 @@ import * as MediaLibrary from 'expo-media-library';
 import GetCartaFrete from '../../interface/GetCartaFrete';
 import GetPlacasVeiculo from '../../interface/GetPlacasVeiculo';
 import { delData, getData, setData } from '../../utils/dataStorage';
+import Constants from 'expo-constants';
 
 import RadioSeletor from '../../Components/RadioOpcaoSeletor'
 import Trabalhando from '../../Components/Trabalhando'
@@ -22,7 +23,8 @@ export default function Seletor( { navigation } ) {
   const [sel         , setSel]          = useState(''); 
   const [trabalhando , setTrabalhando ] = useState(false);
 
-  let   valorSeletor = 'CartaFrete'
+  let valorSeletor = 'CartaFrete'
+  let nameDevice   = Constants.deviceName+' ('+Constants.sessionId+')'
 
   const OpcaoSeletor = (valor) => {
     valorSeletor = valor
@@ -71,9 +73,13 @@ export default function Seletor( { navigation } ) {
       let qtde_soltas    = totalPlacas
 
       for await (let item of dados.data) {
-        if(item.send.success) {
-          qtde_enviados++
-        }
+
+        if(!item.send===undefined) {
+          if(item.send.success) {
+            qtde_enviados++
+        } else {
+          console.log('ERRO: (Seletor) item.send.success :',item.id, nameDevice)
+        }}
       }
 
       Alert.alert('Status:',`

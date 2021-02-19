@@ -19,6 +19,7 @@
     "buffer": "^6.0.3",
     "expo": "~40.0.0",
     "expo-camera": "~9.1.0",
+    "expo-constants": "~9.3.3",
     "expo-image-picker": "~9.2.0",
     "expo-media-library": "~10.0.0",
     "expo-permissions": "~10.0.0",
