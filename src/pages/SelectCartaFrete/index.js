@@ -58,8 +58,21 @@ export default function SelectCartaFrete( props ) {
     let sel_cartaFrete = cartaFrete[checked-1]
     let sel_placas     = sel_cartaFrete.placas
     let sto_carta      = await getData('@ListaFotos')
+    
+   
+    if(!sto_carta.success){
+      sto_carta = {}
+      sto_carta.data = []
+    }
+
     let var_carta      = sto_carta.data
     let sto_placa      = await getData('@ListaFotosPlacas')
+
+    if(!sto_placa.success){
+      sto_carta = {}
+      sto_carta.data = []
+    }
+
     let var_placa      = sto_placa.data
     let len_carta1     = var_carta.length
     let len_placa1     = var_placa.length

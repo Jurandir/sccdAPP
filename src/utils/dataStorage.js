@@ -12,13 +12,13 @@ export async function setData( chave, value ) {
 
 export async function getData( chave ) {
     try {
-        const jsonValue = await AsyncStorage.getItem(chave)
+        let jsonValue = await AsyncStorage.getItem(chave)
 
         if(jsonValue===undefined){
-          jsonValue = {}
+          jsonValue = []
         }
 
-        let ret = jsonValue != null ? JSON.parse(jsonValue) : {}
+        let ret = jsonValue != null ? JSON.parse(jsonValue) : []
 
         return  { success : true, data : ret  }
       } catch(e) {

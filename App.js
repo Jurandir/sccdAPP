@@ -1,4 +1,6 @@
 import React from 'react';
+import { View } from 'react-native';
+import { activateKeepAwake } from "expo-keep-awake";  
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import Home from './src/pages/Home';
@@ -18,6 +20,8 @@ import SelectCartaFrete from './src/pages/SelectCartaFrete';
 const Stack = createStackNavigator();
 
 export default function App() {
+
+  activateKeepAwake();
   
   return (
     <NavigationContainer>

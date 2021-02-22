@@ -26,7 +26,12 @@ export default function SelectPlacas( { navigation } ) {
     let listaVeiculos = []
     let stoListaFotos = await getData('@ListaFotosPlacas')
 
-    console.log('stoListaFotos:',stoListaFotos)
+    //console.log('stoListaFotos:',stoListaFotos)
+
+    if(stoListaFotos===null || stoListaFotos.data===null || stoListaFotos===undefined || stoListaFotos.data===undefined){
+      return 0
+    }
+
     if(!stoListaFotos.data){
       stoListaFotos.data=[]
     }
