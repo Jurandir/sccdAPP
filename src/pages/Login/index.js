@@ -3,9 +3,10 @@ import {  View,           KeyboardAvoidingView,
           TextInput,      TouchableOpacity, 
           Text,           StyleSheet, 
           Animated,       Keyboard,
-          Alert,          Dimensions
+          Alert,          Dimensions, Modal
            } from 'react-native';
 import CheckUser from '../../auth/CheckUser';
+import Trabalhando from '../../Components/Trabalhando'
 import { getData, setData } from '../../utils/dataStorage';
 
 const deviceWidth = Dimensions.get('window').width
@@ -13,6 +14,7 @@ const reducao = 120
 
 export default function Login( { navigation } ) {
 
+  const [trabalhando , setTrabalhando ] = useState(false);
   const [offset]  = useState(new Animated.ValueXY({x: 0,y: 95}));
   const [opacity] = useState(new Animated.Value(0));
   const [logo]    = useState(new Animated.ValueXY({x: deviceWidth-reducao, y: deviceWidth-reducao})); // 180
@@ -21,6 +23,8 @@ export default function Login( { navigation } ) {
   const [userPassword, setUserpassword] = useState('');
 
   useEffect(()=> {
+
+    setTrabalhando(false)
 
     getData('@user').then((sto)=>{
       if(!sto.data) {
@@ -81,6 +85,7 @@ export default function Login( { navigation } ) {
 
   // VALIDA USUARIO EM API
   function userLogin() {
+    setTrabalhando(true)
     setData('@user',{username: userName,  }) 
     CheckUser(userName,userPassword).then((ret)=>{
         if(ret.success) {
@@ -92,9 +97,11 @@ export default function Login( { navigation } ) {
                 style: 'cancel'
               }],{ cancelable: false }
             )           
-        }   
+        }
+        setTrabalhando(false)   
     }).catch(err=>{
-      console.log('ERRO:',ret)
+       setTrabalhando(false)   
+       console.log('ERRO:',ret)
     })
   }
 
@@ -156,6 +163,14 @@ export default function Login( { navigation } ) {
         </TouchableOpacity>
 
       </Animated.View>
+
+      <Modal
+          animationType="fade"
+          transparent={true}
+          visible={trabalhando}
+        >
+          <Trabalhando /> 
+      </Modal> 
       
     </KeyboardAvoidingView>
   );
