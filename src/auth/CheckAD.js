@@ -5,6 +5,8 @@ const url = env.API_AD
 
 const CheckAD = (cliente,usuario,senha) => { 
     return new Promise( async function(resolve, reject) {
+		
+		console.log('URL:',url,usuario)
 
         let method   = 'POST'
         let endpoint = ''
