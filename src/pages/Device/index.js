@@ -4,6 +4,7 @@ import { FontAwesome } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Entypo } from '@expo/vector-icons';
 import { AntDesign } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import { Camera } from 'expo-camera';
 import * as Permissions from 'expo-permissions';
 import * as MediaLibrary from 'expo-media-library';
@@ -11,10 +12,8 @@ import { getData, setData } from '../../utils/dataStorage';
 
 import Trabalhando from '../../Components/Trabalhando'
 
-
 const deviceHeight = Dimensions.get("window").height
 const fotoHeight   = deviceHeight-100
-
 
 export default function Device( props ) {
   const { navigation } = props 
@@ -24,6 +23,7 @@ export default function Device( props ) {
 
   const [hasPermission , setHasPermission] = useState(null);
   const [type          , setType]          = useState(Camera.Constants.Type.back);
+  const [flash         , setFlash]         = useState(Camera.Constants.FlashMode.off);
   const [capturedPhoto , setCapturedPhoto] = useState(null);
   const [modalOpen     , setModalOpen]     = useState(false);
   const [fotoTipo      , setFotoTipo]      = useState(null);
@@ -124,8 +124,25 @@ export default function Device( props ) {
   
   // VISUAL REACT
   return (
-      <Camera style={styles.camera} type={type} ref={camRef}>
+      <Camera style={styles.camera} type={type} flashMode={flash} ref={camRef}>
         <View style={styles.buttonContainer}>
+        
+        <TouchableOpacity
+            style={styles.button}
+            onPress={() => 
+              setFlash(flash === Camera.Constants.FlashMode.on 
+                ? Camera.Constants.FlashMode.off
+                : Camera.Constants.FlashMode.on)}
+            >
+            <Feather
+              name={ flash === Camera.Constants.FlashMode.on ? "zap" : "zap-off"}
+              size={30}
+              color="white"
+            />
+            <Text style={styles.text}>Flash</Text>
+            
+        </TouchableOpacity>
+
           <TouchableOpacity
             style={styles.button}
             onPress={() => {
