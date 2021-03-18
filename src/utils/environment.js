@@ -1,6 +1,6 @@
-const API_SERVER      = '192.168.0.45' //'192.168.0.153' //'192.168.0.31'  // ''
+const API_SERVER      = '192.168.1.138' // '192.168.0.45' //'192.168.0.153' //'192.168.0.31'  // ''
 const API_PORTA       = '5000'
-const API_SERV_UPLOAD = '192.168.0.45' // '192.168.0.153' 
+const API_SERV_UPLOAD = '192.168.1.138' // '192.168.0.45' // '192.168.0.153' 
 const API_PORT_UPLOAD = '5000' 
 
 const environment = {

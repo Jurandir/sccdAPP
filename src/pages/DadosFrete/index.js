@@ -25,6 +25,9 @@ export default function DadosFrete( props ) {
   const [empresa  , setEmpresa]   = useState(null);    
   const [codigo   , setCodigo]    = useState(null);    
   const [emissao  , setEmissao]   = useState(null);    
+  const [fotoAPI  , setFotoAPI]   = useState(0);    
+  const [fotoSCCD , setFotoSCCD]  = useState(0);    
+  const [fotoIDS  , setFotoIDS]   = useState(0);    
 
   useEffect( () => {
     if(params) {
@@ -34,6 +37,9 @@ export default function DadosFrete( props ) {
       setEmpresa(params.dadosCarta.empresa);
       setCodigo(params.dadosCarta.codigo);
       setEmissao(params.dadosCarta.data);
+      setFotoAPI(params.dadosCarta.api);
+      setFotoSCCD(params.dadosCarta.sccd);
+      setFotoIDS(params.dadosCarta.ids);
       setOperacao('CARGA')
       setTipoveiculo('NORMAL')
     } else {
@@ -44,6 +50,9 @@ export default function DadosFrete( props ) {
         setEmpresa(sto.data.empresa);
         setCodigo(sto.data.codigo);
         setEmissao(sto.data.data);
+        setFotoAPI(sto.data.api);
+        setFotoSCCD(sto.data.sccd);
+        setFotoIDS(sto.data.ids);  
       })
 
       getData('@DadosFrete').then((sto) => {        
@@ -131,10 +140,13 @@ export default function DadosFrete( props ) {
     <SafeAreaView style={styles.background}>
 
         <Text style={styles.LabelTitulo}>
-          Carta Frete
+          Carta Frete 
         </Text>
         <Text style={styles.LabelCartaFrete}>
           {cartaFrete}
+        </Text>
+        <Text style={styles.LabelStatus}>
+          Fotos: Srv {fotoAPI} - Site {fotoSCCD} - Ok {fotoIDS}
         </Text>
 
         <Text style={styles.LabelText}>Placas</Text>
@@ -362,11 +374,20 @@ const styles = StyleSheet.create({
     marginTop: 2,
     fontSize: 14
   },
+  LabelStatus:{
+    backgroundColor: '#35AAFF',
+    color: '#fff',
+    paddingVertical:1,
+    paddingHorizontal:6,
+    borderRadius: 5,
+    textAlign: "center",
+    marginBottom: 10,
+    fontSize: 12
+  },
   LabelCartaFrete:{
     color: '#FFF',
     textAlign: "center",
     marginTop: 0,
-    marginBottom: 10,
     fontSize: 30
   },  
   centeredView: {

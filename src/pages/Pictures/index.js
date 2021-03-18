@@ -1,5 +1,5 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {  Alert,            View, 
+import {  Alert,            View,     Modal,
           SafeAreaView,     FlatList,
           Image,            TouchableOpacity,
           Text,             StyleSheet,
@@ -10,6 +10,8 @@ import * as MediaLibrary from 'expo-media-library';
 import SendForm from '../../utils/SendForm';
 import Constants from 'expo-constants';
 
+import Trabalhando from '../../Components/Trabalhando';
+
 const deviceWidth = Dimensions.get('window').width
 const deviceHeigh = Dimensions.get("window").height
 //const deviceScreen = Dimensions.get("screen");
@@ -19,6 +21,7 @@ export default function Pictures( { navigation } ) {
 
   const [ dadosFotos, setDadosFotos ]   = useState({});
   const [ credencial, setCredencial ]   = useState({});
+  const [trabalhando, setTrabalhando ]  = useState(false);
   const refFoto                         = useRef(null)
 
   let nameDevice = Constants.deviceName+' ('+Constants.sessionId+')'
@@ -100,6 +103,8 @@ export default function Pictures( { navigation } ) {
     let listaEnvios = []
     let imagensIDs = []
 
+    setTrabalhando(true)
+
     for await (let foto of dadosFotos) {
       imagem = {
         file: foto.uri,
@@ -132,6 +137,7 @@ export default function Pictures( { navigation } ) {
     }
 
     await Promise.all(listaEnvios)
+    setTrabalhando(false)
 
     setFotosEnviadas(imagensIDs)
     .then((ret)=>{
@@ -225,6 +231,7 @@ export default function Pictures( { navigation } ) {
 
       setCredencial(stoCredencial)
       setDadosFotos( varDados )
+      setTrabalhando(false)
 
     })();
 
@@ -325,6 +332,14 @@ export default function Pictures( { navigation } ) {
           </Text>
       </TouchableOpacity>        
       </SafeAreaView>
+
+      <Modal
+            animationType="fade"
+            transparent={true}
+            visible={trabalhando}
+          >
+            <Trabalhando /> 
+      </Modal> 
 
     </View>
   );

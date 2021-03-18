@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {  View,  TouchableOpacity, Modal,
+import {  View,  TouchableOpacity, Modal, ScrollView,
           Text,  StyleSheet, Alert 
                    } from 'react-native';                  
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -132,19 +132,21 @@ export default function SelectPlacas( { navigation } ) {
   return (
     <View style={styles.background}>
 
-       <Text style={styles.LabelTitulo}>Selecione o Veículo:</Text>
+        <Text style={styles.LabelTitulo}>Selecione o Veículo:</Text>
+        <ScrollView style={styles.scrollView}>
+          <Placas />
+          
+          <TouchableOpacity 
+              style={styles.btnSubmit}
+              onPress={ () => { navigation.goBack() } }
+          >
+            <MaterialCommunityIcons name="exit-run" size={35} color="#FFF" />
+            <Text style={styles.submitText}> 
+                Sair
+            </Text>
+          </TouchableOpacity>
 
-        <Placas />
-
-        <TouchableOpacity 
-            style={styles.btnSubmit}
-            onPress={ () => { navigation.goBack() } }
-        >
-          <MaterialCommunityIcons name="exit-run" size={35} color="#FFF" />
-          <Text style={styles.submitText}> 
-              Sair
-          </Text>
-        </TouchableOpacity>
+        </ScrollView>
 
         <Modal
           animationType="fade"
@@ -164,6 +166,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#191919',
+  },
+  scrollView:{
+    width: '95%',
+    marginBottom: 10,
+    marginLeft: 25,
   },
   container:{
     flex:1,
@@ -199,8 +206,10 @@ const styles = StyleSheet.create({
   LabelTitulo:{
     color: '#FFF',
     textAlign: "center",
+    marginTop: 50,
     marginBottom: 25,
     fontWeight: 'bold',
-    fontSize: 20
+    fontSize: 20,
+    width: '90%',
   }
 });

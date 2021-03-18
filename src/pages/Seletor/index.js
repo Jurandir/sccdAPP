@@ -256,7 +256,10 @@ export default function Seletor( { navigation } ) {
                     codigo: cod ,
                     placas: ret.PLACAS,
                     motorista: ret.MOTORISTA,
-                    data: ret.DATA
+                    data: ret.DATA,
+                    api: ret.FOTOS_API || 0,
+                    sccd: ret.FOTOS_SCCD || 0,
+                    ids: ret.FOTOS_IDS || 0
                   }
                   setData('@CartaFrete',dadosCarta)
 
