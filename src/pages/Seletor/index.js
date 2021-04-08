@@ -385,6 +385,16 @@ export default function Seletor( { navigation } ) {
 
         <TouchableOpacity 
             style={styles.btnSubmit}
+            onPress={ () => { navigation.navigate('Sincronizacao') } }
+        >
+          <MaterialCommunityIcons name="server-network" size={35} color="#FFF" />
+          <Text style={styles.submitText}> 
+              Sincroniza com servidor
+          </Text>
+        </TouchableOpacity>    
+
+        <TouchableOpacity 
+            style={styles.btnSubmit}
             onPress={ () => BackHandler.exitApp() }
         >
           <MaterialCommunityIcons name="exit-run" size={35} color="#FFF" />

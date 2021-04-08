@@ -16,6 +16,7 @@ import Pictures from './src/pages/Pictures';
 import PicturesPlacas from './src/pages/PicturesPlacas';
 import SelectPlacas from './src/pages/SelectPlacas';
 import SelectCartaFrete from './src/pages/SelectCartaFrete';
+import Sincronizacao from './src/pages/Sincronizacao';
 
 const Stack = createStackNavigator();
 
@@ -78,6 +79,15 @@ export default function App() {
           options={{
             headerShown: false,
             title: 'CARTA FRETE:',
+            headerTransparent: true,
+            headerTintColor: '#000',
+          }}
+        />
+
+        <Stack.Screen name="Sincronizacao" component={Sincronizacao} 
+          options={{
+            headerShown: false,
+            title: 'SINCRONIZAÇÃO:',
             headerTransparent: true,
             headerTintColor: '#000',
           }}

@@ -8,7 +8,9 @@ const environment = {
     API_CARTAFRETE:       `http://${API_SERVER}:${API_PORTA}/api/cartafrete`,
     API_CARTAFRETEPLACAS: `http://${API_SERVER}:${API_PORTA}/api/cartafreteplacas`,
     API_PLACASVEICULO:    `http://${API_SERVER}:${API_PORTA}/api/placasveiculo`,
-    API_UPLOAD:           `http://${API_SERV_UPLOAD}:${API_PORT_UPLOAD}/file/upload`
+    API_UPLOAD:           `http://${API_SERV_UPLOAD}:${API_PORT_UPLOAD}/file/upload`,
+    API_CHECKIMG:         `http://${API_SERVER}:${API_PORTA}/api/checkimgsccd`,
+    API_DADOSAPP:         `http://${API_SERVER}:${API_PORTA}/api/receiveDataDebugAPP`,
 }
 
 export default environment
