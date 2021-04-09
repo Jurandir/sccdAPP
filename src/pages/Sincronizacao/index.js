@@ -3,6 +3,8 @@ import {  View,  TouchableOpacity, Modal,
           Text,  StyleSheet, Alert 
                    } from 'react-native';                  
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import * as Device from 'expo-device';
+
 import { getData, setData } from '../../utils/dataStorage';
 import Trabalhando from '../../Components/Trabalhando';
 import sendDadosAPP_SCCD from "../../interface/sendDadosAPP_SCCD";
@@ -17,6 +19,12 @@ export default function Sincronizacao( props ) {
   useEffect(() => {
 
   }, [])
+
+  const testaArquivos = () => {
+
+    console.log( Device.osBuildId )
+    
+  }
 
   const confirmaSincronizacao = () => {
     Alert.alert('Confirmação:', 'Sincronizar os dados internos com o SERVIDOR?',
@@ -132,6 +140,16 @@ export default function Sincronizacao( props ) {
               Ajusta dados internos
           </Text>
         </TouchableOpacity>
+
+        <TouchableOpacity 
+            style={styles.btnSubmit}
+            onPress={ testaArquivos }
+        >
+          <MaterialCommunityIcons name="server-network" size={35} color="#FFF" />
+          <Text style={styles.submitText}> 
+              Testa Arquivos
+          </Text>
+        </TouchableOpacity>        
 
         <TouchableOpacity 
             style={styles.btnSubmit}

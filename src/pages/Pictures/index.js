@@ -103,6 +103,7 @@ export default function Pictures( { navigation } ) {
     let listaEnvios = []
     let imagensIDs = []
 
+
     setTrabalhando(true)
 
     for await (let foto of dadosFotos) {
@@ -130,11 +131,15 @@ export default function Pictures( { navigation } ) {
                 if(ret.success) {
                   imagensIDs.push(ret.id)
                 }  
+            }).catch((err)=>{
+              console.log(new Date(),' Erro envio:',err)
             })
         )  
       }
 
     }
+
+    console.log('Enviando...',listaEnvios.length,' Fotos...' )
 
     await Promise.all(listaEnvios)
     setTrabalhando(false)

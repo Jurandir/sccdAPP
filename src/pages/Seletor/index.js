@@ -76,12 +76,12 @@ export default function Seletor( { navigation } ) {
 
       for await (let item of dados.data) {
 
-        if(!item.send===undefined) {
-          if(item.send.success) {
-            qtde_enviados++
+        if(!(item.send===undefined)) {
+          if(item.send.success) {   qtde_enviados++   }  
         } else {
           console.log('ERRO: (Seletor) item.send.success :',item.id, nameDevice)
-        }}
+        }
+
       }
 
       Alert.alert('Status:',`
@@ -389,7 +389,7 @@ export default function Seletor( { navigation } ) {
         >
           <MaterialCommunityIcons name="server-network" size={35} color="#FFF" />
           <Text style={styles.submitText}> 
-              Sincroniza com servidor
+              Sincronizar com servidor
           </Text>
         </TouchableOpacity>    
 
