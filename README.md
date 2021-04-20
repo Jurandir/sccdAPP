@@ -22,6 +22,7 @@ expo install  buffer
 expo install  react-native-keyboard-aware-scrollview
 expo install  react-native-picker-select
 expo install  react-native-web
+expo install expo-device
 
 
  expo start --no-dev --minify

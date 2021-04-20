@@ -1,4 +1,4 @@
-const fileDEBUG = require('./1419742c1c5b7d7e847318b9b883d99ee93ae6f2.json')
+const fileDEBUG = require('./0e395623f39c8a38699461b1eb19529298c765c6.json')
 
 let ListaFotos = fileDEBUG.ListaFotos
 let nameDevice = 'TESTE'
