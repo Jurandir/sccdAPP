@@ -28,6 +28,7 @@ export default function Device( props ) {
   const [modalOpen     , setModalOpen]     = useState(false);
   const [fotoTipo      , setFotoTipo]      = useState(null);
   const [trabalhando   , setTrabalhando ]  = useState(false);
+  const [pictureSize   , setPictureSize ]  = useState("1280x720")
 
   const camRef = useRef(null);
 
@@ -124,7 +125,7 @@ export default function Device( props ) {
   
   // VISUAL REACT
   return (
-      <Camera style={styles.camera} type={type} flashMode={flash} ref={camRef}>
+      <Camera style={styles.camera} pictureSize={pictureSize} type={type} flashMode={flash} ref={camRef}>
         <View style={styles.buttonContainer}>
         
         <TouchableOpacity
